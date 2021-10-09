@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 	//htonl formatea el numero que recibe al formato necesario
 	serv_adr.sin_addr.s_addr = htonl(INADDR_ANY);
 	// establecemos el puerto de escucha
-	serv_adr.sin_port = htons(9050);
+	serv_adr.sin_port = htons(9010);
 	if (bind(sock_listen, (struct sockaddr *) &serv_adr, sizeof(serv_adr)) < 0)
 		printf ("Error al bind");
 	
@@ -80,70 +80,24 @@ int main(int argc, char *argv[])
 			if (codigo == 0)
 				terminar = 1;
 			
-			else if (codigo ==1) //piden la longitd del nombre
+			else if (codigo ==1) // FaC: Fahrenheit a Celsius.
 			{
-				sprintf (respuesta,"%d",strlen (nombre));
+				float initial = atof(nombre);
+				float final;
+				final = (initial - 32)/1.8;
+				char finalstring[20];
+				sprintf(finalstring, "%f", final);
+				strcpy (respuesta,finalstring);
 			}
 			
-			else if (codigo ==2)
+			else if (codigo ==2) // CaF: Celsius a Fahrenheit.
 			{
-				// quieren saber si el nombre es bonito
-				if((nombre[0]=='M') || (nombre[0]=='S'))
-				{
-					strcpy (respuesta,"SI");
-				}
-				else
-				{
-					strcpy (respuesta,"NO");
-				}
-			}
-
-			else if (codigo ==4) // SI o NO es mi nombre palíndromo.
-			{
-				for (int x = 0; x < (strlen(invertido) / 2); x++) {
-					char temporal = invertido[x];
-					invertido[x] = invertido[strlen(invertido) - x - 1];
-					invertido[strlen(invertido)- x - 1] = temporal;
-				}
-				
-				// A modo de chequeo:
-				printf ("Nombre: %s\n", nombre);
-				printf ("Invertido: %s\n", invertido);
-				
-				if (nombre == invertido) // Si el inverso es igual al original, entonces es políndromo.
-				{
-					strcpy (respuesta,"SI");
-				}
-				else
-				{
-					strcpy (respuesta,"NO");
-				}
-				
-			}
-
-			else if (codigo == 5) // FUNCIONA! Devolver todo el nombre en MAYÚSCULAS.
-			{
-				for (int i = 0; i < strlen(nombre); i++)
-				{
-					nombre[i] = toupper(nombre[i]);
-				}
-				
-				strcpy (respuesta,nombre);
-			}
-			
-			else // Code 3.
-			{
-					p = strtok( NULL, "/");
-					float altura =  atof (p);
-					if (altura > 1.8)
-					{
-						sprintf (respuesta, "%s: eres alto",nombre);
-					}
-					
-					else
-					{
-						sprintf (respuesta, "%s: eresbajo",nombre);
-					}
+				float initial = atof(nombre);
+				float final;
+				final = 1.8*initial + 32;
+				char finalstring[20];
+				sprintf(finalstring, "%f", final);
+				strcpy (respuesta,finalstring);
 			}
 			
 			if (codigo != 0)
